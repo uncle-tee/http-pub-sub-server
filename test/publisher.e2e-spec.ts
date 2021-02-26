@@ -8,6 +8,7 @@ import { ValidatorTransformerPipe } from '../src/core/transfomer/validator.trans
 import { Connection, getConnection } from 'typeorm';
 import { EventRepository } from '../src/repository/event.repository';
 import { MessageRepository } from '../src/repository/message.repository';
+import { Event } from '../src/domain/entities/event.entity';
 
 describe('PubSubController (e2e)', () => {
   let app: INestApplication;
@@ -63,8 +64,31 @@ describe('PubSubController (e2e)', () => {
               .findByEvent(ev)
               .then(msg => {
                 expect(msg.length).toEqual(1);
+                let message = msg[0];
+                expect(message).toEqual(payload.message);
               });
           });
+      });
+  });
+
+  it('Test a new topic over rides existing one', () => {
+    let event = new Event();
+    event.topic = faker.random.uuid();
+    event.save();
+    const url = `/publish/${event.topic}`;
+    const payload: PublisherRequestDto = {
+      message: faker.random.uuid(),
+    };
+    return request(app.getHttpServer())
+      .post(url)
+      .send(payload)
+      .expect(201)
+      .then(response => {
+        return connection.getCustomRepository(EventRepository).count({
+          topic: event.topic,
+        }).then(eventCount => {
+          expect(eventCount).toEqual(1);
+        });
       });
   });
 });
