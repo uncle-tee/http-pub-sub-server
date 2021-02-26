@@ -10,7 +10,7 @@ import { EventRepository } from '../src/repository/event.repository';
 import { MessageRepository } from '../src/repository/message.repository';
 import { Event } from '../src/domain/entities/event.entity';
 
-describe('PubSubController (e2e)', () => {
+describe('Publisher requests Test (e2e)', () => {
   let app: INestApplication;
   let connection: Connection;
 
@@ -65,7 +65,7 @@ describe('PubSubController (e2e)', () => {
               .then(msg => {
                 expect(msg.length).toEqual(1);
                 let message = msg[0];
-                expect(message).toEqual(payload.message);
+                expect(message.data).toEqual(payload.message);
               });
           });
       });
@@ -84,11 +84,13 @@ describe('PubSubController (e2e)', () => {
       .send(payload)
       .expect(201)
       .then(response => {
-        return connection.getCustomRepository(EventRepository).count({
-          topic: event.topic,
-        }).then(eventCount => {
-          expect(eventCount).toEqual(1);
-        });
+        return connection
+          .getCustomRepository(EventRepository)
+          .count({
+            topic: event.topic,
+          }).then(eventCount => {
+            expect(eventCount).toEqual(1);
+          });
       });
   });
 });

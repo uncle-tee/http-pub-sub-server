@@ -10,7 +10,7 @@ export class Subscription extends BaseEntity {
   @ManyToOne(() => Event)
   event: Event;
 
-  @Column()
+  @Column({ unique: true })
   webHook: string;
 
   @CreateDateColumn()
