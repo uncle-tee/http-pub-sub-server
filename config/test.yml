@@ -1,0 +1,10 @@
+db:
+  type: 'postgres'
+  host: 'localhost'
+  port: 5432
+  name: 'test'
+  password: 'test'
+  username: 'test'
+  synchronize: true
+  show_log: false
+  drop_schema: true
