@@ -1,0 +1,3 @@
+db:
+  synchronized: true
+  show_log: false
