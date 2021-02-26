@@ -11,6 +11,9 @@ export class Message extends BaseEntity {
   @ManyToOne(() => Event)
   event: Event;
 
+  @Column({ nullable: true })
+  eventId: number;
+
   @Column({ type: 'text' })
   data: string;
 

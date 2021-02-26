@@ -7,9 +7,10 @@ import { EventRepository } from './repository/event.repository';
 import { SubscriptionRepository } from './repository/subscription.repository';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ResponseTransformer } from './core/transfomer/response.transformer';
+import { CronModule } from './cron/cron.module';
 
 @Module({
-  imports: [ConfigModule, TypeOrmModule.forFeature([EventRepository, SubscriptionRepository])],
+  imports: [ConfigModule, TypeOrmModule.forFeature([EventRepository, SubscriptionRepository]), CronModule],
   controllers: [PubSubController],
   providers: [PubSubService,
     ResponseTransformer,

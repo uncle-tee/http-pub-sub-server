@@ -9,6 +9,8 @@ import { Connection, getConnection } from 'typeorm';
 import { EventRepository } from '../src/repository/event.repository';
 import { MessageRepository } from '../src/repository/message.repository';
 import { Event } from '../src/domain/entities/event.entity';
+import { NotificationGeneratorCron } from '../src/cron/notification.generator.cron';
+import { NotifierCron } from '../src/cron/notifier.cron';
 
 describe('Publisher requests Test (e2e)', () => {
   let app: INestApplication;
@@ -17,7 +19,13 @@ describe('Publisher requests Test (e2e)', () => {
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).overrideProvider(NotificationGeneratorCron)
+      .useValue({
+        createNotification: jest.fn().mockImplementation(() => Promise.resolve()),
+      }).overrideProvider(NotifierCron)
+      .useValue({
+        notify: jest.fn().mockImplementation(() => Promise.resolve()),
+      }).compile();
 
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidatorTransformerPipe());

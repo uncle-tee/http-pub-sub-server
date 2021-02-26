@@ -16,4 +16,7 @@ export class Subscription extends BaseEntity {
   @CreateDateColumn()
   createdAt: Date;
 
+  @Column({ nullable: true })
+  eventId: number;
+
 }
