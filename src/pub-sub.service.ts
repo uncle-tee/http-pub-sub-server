@@ -8,13 +8,13 @@ import { SubscriptionRepository } from './repository/subscription.repository';
 @Injectable()
 export class PubSubService {
 
-  constructor(@InjectRepository(EventRepository) private readonly topicRepository: EventRepository,
+  constructor(@InjectRepository(EventRepository) private readonly eventRepository: EventRepository,
               @InjectRepository(SubscriptionRepository) private readonly subscriptionRepository: SubscriptionRepository) {
   }
 
   publish(topic: string, data: any) {
-    return this.topicRepository
-      .findByEvent(topic)
+    return this.eventRepository
+      .findByTopic(topic)
       .then(event => {
         let message = new Message();
         message.event = event;
@@ -23,17 +23,17 @@ export class PubSubService {
       });
   }
 
-  subscribe(topic: string, callback: string) {
-    return this.topicRepository
-      .findByEvent(topic)
-      .then(topic => {
+  subscribe(topic: string, webhook: string) {
+    return this.eventRepository
+      .findByTopic(topic)
+      .then(event => {
         return this.subscriptionRepository
-          .findByWebHook(callback)
+          .findByWebHookAndEvent(webhook, event)
           .then(subscription => {
             if (!subscription) {
               subscription = new Subscription();
-              subscription.event = topic;
-              subscription.webHook = callback;
+              subscription.event = event;
+              subscription.webHook = webhook;
               return subscription.save();
             }
             return subscription;

@@ -9,7 +9,7 @@ import { Notification } from '../domain/entities/notification.entity';
 export class EventRepository extends Repository<Event> {
 
 
-  findByEvent(topic: string) {
+  findByTopic(topic: string) {
     return this.findOne({ topic }).then(event => {
       if (!event) {
         event = new Event();

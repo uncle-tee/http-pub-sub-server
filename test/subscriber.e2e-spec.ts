@@ -9,6 +9,10 @@ import * as request from 'supertest';
 import { SubscriptionRepository } from '../src/repository/subscription.repository';
 import { NotificationGeneratorCron } from '../src/cron/notification.generator.cron';
 import { NotifierCron } from '../src/cron/notifier.cron';
+import { Event } from '../src/domain/entities/event.entity';
+import { Subscription } from '../src/domain/entities/subscriber.entity';
+import { response } from 'express';
+
 
 describe('Subscriber e2e', () => {
 
@@ -62,6 +66,34 @@ describe('Subscriber e2e', () => {
             expect(subscription.webHook).toEqual(payload.url);
           });
       });
+  });
+
+  it('Test that a subscriber with the same topic and event cannot be recreated', () => {
+    let event = new Event();
+    event.topic = faker.random.alphaNumeric();
+    return event.save().then(event => {
+      let subscription = new Subscription();
+      subscription.event = event;
+      subscription.webHook = faker.internet.url();
+      return subscription.save().then(subscription => {
+        const payload: SubscriberRequestDto = {
+          url: subscription.webHook,
+        };
+        const url = `/subscribe/${event.topic}`;
+        return request(app.getHttpServer())
+          .post(url)
+          .send(payload)
+          .expect(201)
+          .then(_ => {
+            return getConnection()
+              .getCustomRepository(SubscriptionRepository)
+              .count({ webHook: subscription.webHook, event })
+              .then(count => {
+                expect(count).toEqual(1);
+              });
+          });
+      });
+    });
   });
 
 
