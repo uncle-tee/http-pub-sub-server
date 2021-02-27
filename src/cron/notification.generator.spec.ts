@@ -5,10 +5,8 @@ import { Event } from '../domain/entities/event.entity';
 import * as faker from 'faker';
 import { Subscription } from '../domain/entities/subscriber.entity';
 import { Message } from '../domain/entities/message.entity';
-import { Connection, getConnection, IsNull, MoreThan, MoreThanOrEqual, Not } from 'typeorm';
+import { Connection, getConnection } from 'typeorm';
 import { NotificationRepository } from '../repository/notification.repository';
-import { SubscriptionRepository } from '../repository/subscription.repository';
-import { HttpModule } from '@nestjs/common';
 
 describe('CronService', () => {
   let service: NotificationGeneratorCron;
