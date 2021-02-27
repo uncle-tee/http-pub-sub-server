@@ -1,0 +1,19 @@
+
+# Versioning and metadata
+.git
+.gitignore
+.dockerignore
+
+# Build dependencies
+coverage
+
+*.d.ts
+
+# Environment (contains sensitive data)
+.env
+.idea
+Dockerfile
+README.md
+Dockerfile.worker
+
+/data/
