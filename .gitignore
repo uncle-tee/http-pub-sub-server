@@ -3,6 +3,8 @@
 /node_modules
 mydb.sql
 
+data
+
 # Logs
 logs
 *.log
