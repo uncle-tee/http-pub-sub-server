@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Message } from './message.entity';
 import { Subscription } from './subscriber.entity';
 import { DeliveryStatus } from '../enums/delivery.status.enum';
@@ -27,4 +27,7 @@ export class Notification extends BaseEntity {
 
   @Column({ default: DeliveryStatus.PENDING })
   deliveryStatus: DeliveryStatus;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

@@ -1,8 +1,10 @@
-import { IsNotEmpty, IsString, IsUrl } from 'class-validator';
+import { IsNotEmpty, IsString, isURL, IsUrl } from 'class-validator';
 
 export class SubscriberRequestDto {
   @IsString()
   @IsNotEmpty()
-  @IsUrl()
+  @IsUrl({
+    require_tld: false,
+  })
   url: string;
 }

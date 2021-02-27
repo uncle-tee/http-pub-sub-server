@@ -13,6 +13,7 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
+    "start-subscriber": "node dist/client/subscriber/main.js",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest --runInBand",
     "test:watch": "jest --watch",

@@ -46,7 +46,7 @@ describe('Subscriber e2e', () => {
 
   it('Test that a subscriber is created after request', () => {
     const payload: SubscriberRequestDto = {
-      url: `${faker.internet.url()}/webhook`,
+      url: `http://localhost:4000/event`,
     };
     const url = `/subscribe/${faker.random.uuid()}`;
     return request(app.getHttpServer())

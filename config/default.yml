@@ -11,3 +11,6 @@ db:
   synchronize: true
   show_log: false
   drop_schema: false
+
+subscriber:
+  port: 4000
