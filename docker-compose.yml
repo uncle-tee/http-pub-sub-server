@@ -11,6 +11,7 @@ services:
       - "5674:5432"
     volumes:
       - ./data/db_data:/var/lib/postgresql/data
+
   pub-sub:
     #    build:
     #      context: .
@@ -19,7 +20,7 @@ services:
     ports:
       - 3000:2000
     environment:
-      PORT: 3000
+      PORT: 2000
       NODE_ENV: production
       DB_TYPE: postgres
       DB_HOST: postgres
@@ -37,7 +38,9 @@ services:
           'node',
           'dist/src/main.js'
       ]
-  subcriber-1:
+
+  #    Subscribers
+  meridian:
     #    build:
     #      context: .
     #      dockerfile: Dockerfile
@@ -53,7 +56,8 @@ services:
           'node',
           'dist/client/subscriber/main.js'
       ]
-  subcriber-2:
+
+  luminskin:
     #    build:
     #      context: .
     #      dockerfile: Dockerfile
@@ -69,7 +73,8 @@ services:
           'node',
           'dist/client/subscriber/main.js'
       ]
-  subcriber-3:
+
+  menskin:
     #    build:
     #      context: .
     #      dockerfile: Dockerfile
