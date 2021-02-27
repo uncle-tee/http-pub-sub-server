@@ -19,7 +19,7 @@ export class PubSubService {
         let message = new Message();
         message.event = event;
         message.data = JSON.stringify(data);
-        return message.save().then(_ => Promise.resolve(event));
+        return message.save();
       });
   }
 
