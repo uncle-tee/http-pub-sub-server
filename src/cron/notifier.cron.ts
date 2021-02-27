@@ -38,13 +38,13 @@ export class NotifierCron implements OnApplicationBootstrap {
         },
         take: 30,
       }).then(notifications => {
-        let eventIds = notifications.map(notification => notification.message.eventId);
+        const eventIds = notifications.map(notification => notification.message.eventId);
         return entityManager.findByIds(Event, eventIds).then(events => {
-          let map = notifications.map(notification => {
-            let topic = events.find(event => event.id === notification.message.eventId).topic;
-            let webHook = notification.subscription.webHook;
-            let data = JSON.parse(notification.message.data);
-            let payload = { topic, data };
+          const map = notifications.map(notification => {
+            const topic = events.find(event => event.id === notification.message.eventId).topic;
+            const webHook = notification.subscription.webHook;
+            const data = JSON.parse(notification.message.data);
+            const payload = { topic, data };
             return this.httpService
               .post(webHook, payload)
               .toPromise()
@@ -56,7 +56,7 @@ export class NotifierCron implements OnApplicationBootstrap {
                 return notification.save();
               })
               .catch(err => {
-                let response = err.response;
+                const response = err.response;
                 notification.numberOfAttempt = response && response.data != null ? Number(notification.numberOfAttempt) + 1 : 7;
                 notification.deliveryStatus = DeliveryStatus.FAILED;
                 notification.response = response && response.data != null ? JSON.stringify(response.data) : JSON.stringify(err);

@@ -45,13 +45,13 @@ export class NotificationGeneratorCron implements OnApplicationBootstrap {
         .select(['subscription.id as subscription', 'message.id as message'])
         .getRawMany()
         .then(async (subscriptionMessages: { subscription, message }[]) => {
-          let subscriptionIds = subscriptionMessages.map(subscriptionMessage => subscriptionMessage.subscription);
-          let messagesIds = subscriptionMessages.map(subscriptionMessage => subscriptionMessage.message);
-          let subscriptions = await entityManager.getCustomRepository(SubscriptionRepository).findByIds(subscriptionIds);
-          let messages = await entityManager.getCustomRepository(MessageRepository).findByIds(messagesIds);
+          const subscriptionIds = subscriptionMessages.map(subscriptionMessage => subscriptionMessage.subscription);
+          const messagesIds = subscriptionMessages.map(subscriptionMessage => subscriptionMessage.message);
+          const subscriptions = await entityManager.getCustomRepository(SubscriptionRepository).findByIds(subscriptionIds);
+          const messages = await entityManager.getCustomRepository(MessageRepository).findByIds(messagesIds);
           const notificationPromise = subscriptions.map(subscription => {
-            let message = messages.find(message => message.eventId === subscription.eventId);
-            let notification = new Notification();
+            const message = messages.find(message => message.eventId === subscription.eventId);
+            const notification = new Notification();
             notification.message = message;
             notification.subscription = subscription;
             return entityManager.save(notification);

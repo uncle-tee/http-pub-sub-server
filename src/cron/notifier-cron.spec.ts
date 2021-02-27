@@ -13,14 +13,14 @@ import { AxiosResponse } from 'axios';
 import { DeliveryStatus } from '../domain/enums/delivery.status.enum';
 
 function mockNotification() {
-  let event = new Event();
+  const event = new Event();
   event.topic = faker.random.uuid();
   return event.save().then(event => {
-    let subscription = new Subscription();
+    const subscription = new Subscription();
     subscription.event = event;
     subscription.webHook = faker.internet.url();
     return subscription.save().then(subscription => {
-      let message = new Message();
+      const message = new Message();
       message.data = '{\n    "data": {\n        "eventId": 1\n    },\n    "code": 201\n}';
       message.event = event;
       return message.save().then(message => {
@@ -48,21 +48,21 @@ describe('CronService', () => {
 
 
   it('Test that notification can be sent successfully', () => {
-    let httpResponse = {
+    const httpResponse = {
       info: faker.internet.url(),
     };
     const data: AxiosResponse = {
       config: undefined, data: httpResponse, headers: undefined, status: 200, statusText: '',
     };
-    let spyInstance = jest.spyOn(httpService, 'post').mockReturnValue(of(data));
+    const spyInstance = jest.spyOn(httpService, 'post').mockReturnValue(of(data));
     return mockNotification()
       .then(_ => {
-        let noti = new Notification();
+        const noti = new Notification();
         noti.subscription = _.subscription;
         noti.message = _.message;
         return noti.save().then(_ => {
           return service.notify().then(notifications => {
-            let notification = notifications[0];
+            const notification = notifications[0];
             expect(notification.deliveryStatus).toEqual(DeliveryStatus.DELIVERED);
             expect(notification.responseCode).toEqual(200);
             expect(notification.numberOfAttempt).toEqual(1);
@@ -73,23 +73,23 @@ describe('CronService', () => {
   });
 
   it('test notification will not send when it reaches its maximum limit', function() {
-    let httpResponse = {
+    const httpResponse = {
       info: faker.internet.url(),
     };
     const data: AxiosResponse = {
       config: undefined, data: httpResponse, headers: undefined, status: 404, statusText: '',
     };
-    let spyInstance = jest.spyOn(httpService, 'post').mockReturnValue(throwError({ response: data }));
+    const spyInstance = jest.spyOn(httpService, 'post').mockReturnValue(throwError({ response: data }));
     return mockNotification()
       .then(_ => {
-        let notification = new Notification();
+        const notification = new Notification();
         notification.message = _.message;
         notification.subscription = _.subscription;
         notification.responseCode = 500;
         notification.numberOfAttempt = 4;
         return notification.save().then(_ => {
           return service.notify().then(notifications => {
-            let notification = notifications[0];
+            const notification = notifications[0];
             expect(notification.responseCode).toEqual(404);
             expect(notification.deliveryStatus).toEqual(DeliveryStatus.FAILED);
             expect(notification.numberOfAttempt).toEqual(5);

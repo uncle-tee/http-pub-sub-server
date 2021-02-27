@@ -24,14 +24,14 @@ describe('CronService', () => {
 
   it('Test that notifications are created', async () => {
     for (let i = 0; i < 20; i++) {
-      let event = new Event();
+      const event = new Event();
       event.topic = faker.random.uuid();
       await event.save().then(event => {
         const sub = new Subscription();
         sub.webHook = faker.internet.url();
         sub.event = event;
         return sub.save().then(_ => {
-          let msg = new Message();
+          const msg = new Message();
           msg.data = faker.random.uuid();
           msg.event = event;
           return msg.save();
@@ -50,14 +50,14 @@ describe('CronService', () => {
 
   it('Test that notifications cannot be recreated for subscriptions after messages', async () => {
     return connection.getCustomRepository(NotificationRepository).count().then(counter => {
-      let event = new Event();
+      const event = new Event();
       event.topic = faker.random.uuid();
       return event.save().then(event => {
-        let message = new Message();
+        const message = new Message();
         message.event = event;
         message.data = faker.random.alphaNumeric();
         return message.save().then(_ => {
-          let subscription = new Subscription();
+          const subscription = new Subscription();
           subscription.webHook = faker.internet.url();
           subscription.event = event;
           return subscription.save();

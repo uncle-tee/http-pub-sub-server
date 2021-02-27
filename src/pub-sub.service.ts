@@ -16,7 +16,7 @@ export class PubSubService {
     return this.eventRepository
       .findByTopic(topic)
       .then(event => {
-        let message = new Message();
+        const message = new Message();
         message.event = event;
         message.data = JSON.stringify(data);
         return message.save();

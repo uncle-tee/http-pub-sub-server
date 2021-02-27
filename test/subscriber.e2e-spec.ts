@@ -11,7 +11,6 @@ import { NotificationGeneratorCron } from '../src/cron/notification.generator.cr
 import { NotifierCron } from '../src/cron/notifier.cron';
 import { Event } from '../src/domain/entities/event.entity';
 import { Subscription } from '../src/domain/entities/subscriber.entity';
-import { response } from 'express';
 
 
 describe('Subscriber e2e', () => {
@@ -58,7 +57,7 @@ describe('Subscriber e2e', () => {
       .send(payload)
       .expect(201)
       .then(response => {
-        let data = response.body.data;
+        const data = response.body.data;
         return connection
           .getCustomRepository(SubscriptionRepository)
           .findOne({ id: data.subscriberId })
@@ -69,10 +68,10 @@ describe('Subscriber e2e', () => {
   });
 
   it('Test that a subscriber with the same topic and event cannot be recreated', () => {
-    let event = new Event();
+    const event = new Event();
     event.topic = faker.random.alphaNumeric();
     return event.save().then(event => {
-      let subscription = new Subscription();
+      const subscription = new Subscription();
       subscription.event = event;
       subscription.webHook = faker.internet.url();
       return subscription.save().then(subscription => {
