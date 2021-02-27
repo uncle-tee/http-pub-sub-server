@@ -5,6 +5,14 @@ Http pub sub server allows pushing of message to subscribers via HTTP. HTTP Pub 
 ![Http Pub SubServer](https://pangaea-interviews.now.sh/_next/static/images/pubsub-diagram-15a833df7c2a0fd11cade0630fe8e8ba.png)
 
 
+
+## Model Diagram
+
+![enter image description here](https://asobooks-prod.s3.eu-west-2.amazonaws.com/pusub-server-model.png)
+
+
+
+
 ### How it works
 To see how the pubsub server works instantly,  Docker-compose,  might be a good fit .
 
@@ -79,8 +87,3 @@ Run docker instance with
 -e SHOW_LOG= 'false' \
 -e TYPEORM_SYNC= 'true' \
 pubsub
-
-## Model Diagram
-
-![enter image description here](https://asobooks-prod.s3.eu-west-2.amazonaws.com/pusub-server-model.png)
-
