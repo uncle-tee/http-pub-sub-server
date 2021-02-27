@@ -12,13 +12,13 @@ export class PubSubService {
               @InjectRepository(SubscriptionRepository) private readonly subscriptionRepository: SubscriptionRepository) {
   }
 
-  publish(topic: string, data: string) {
+  publish(topic: string, data: any) {
     return this.topicRepository
       .findByEvent(topic)
       .then(event => {
         let message = new Message();
         message.event = event;
-        message.data = data;
+        message.data = JSON.stringify(data);
         return message.save().then(_ => Promise.resolve(event));
       });
   }

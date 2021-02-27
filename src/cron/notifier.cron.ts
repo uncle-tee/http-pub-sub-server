@@ -43,9 +43,10 @@ export class NotifierCron implements OnApplicationBootstrap {
           let map = notifications.map(notification => {
             let topic = events.find(event => event.id === notification.message.eventId).topic;
             let webHook = notification.subscription.webHook;
-            let data = notification.message.data;
+            let data = JSON.parse(notification.message.data);
+            let payload = { topic, data };
             return this.httpService
-              .post(webHook, { topic, data })
+              .post(webHook, payload)
               .toPromise()
               .then(response => {
                 notification.numberOfAttempt = Number(notification.numberOfAttempt) + 1;

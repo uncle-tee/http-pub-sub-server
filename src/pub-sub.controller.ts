@@ -1,8 +1,9 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Param, Post, Req } from '@nestjs/common';
 import { PubSubService } from './pub-sub.service';
 import { PublisherRequestDto } from './dto/publisher.request.dto';
 import { SubscriberRequestDto } from './dto/subscriber.request.dto';
 import { ResponseDto } from './dto/response.dto';
+import { Request } from 'express';
 
 
 @Controller()
@@ -11,9 +12,9 @@ export class PubSubController {
   }
 
   @Post('publish/:topic')
-  publish(@Param('topic') topic: string, @Body() request: PublisherRequestDto) {
+  publish(@Param('topic') topic: string, @Req() request: Request) {
     return this.pubSubService
-      .publish(topic, request.message)
+      .publish(topic, request.body)
       .then(event => {
         return Promise.resolve(new ResponseDto({ eventId: event.id }, 201));
       });

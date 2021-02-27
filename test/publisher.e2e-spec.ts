@@ -73,7 +73,7 @@ describe('Publisher requests Test (e2e)', () => {
               .then(msg => {
                 expect(msg.length).toEqual(1);
                 let message = msg[0];
-                expect(message.data).toEqual(payload.message);
+                expect(message.data).toEqual(JSON.stringify(payload));
               });
           });
       });

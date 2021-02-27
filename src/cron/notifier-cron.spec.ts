@@ -21,7 +21,7 @@ function mockNotification() {
     subscription.webHook = faker.internet.url();
     return subscription.save().then(subscription => {
       let message = new Message();
-      message.data = faker.random.alphaNumeric();
+      message.data = '{\n    "data": {\n        "eventId": 1\n    },\n    "code": 201\n}';
       message.event = event;
       return message.save().then(message => {
         return Promise.resolve({ message, subscription });
