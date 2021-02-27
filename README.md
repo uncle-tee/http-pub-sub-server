@@ -1,73 +1,86 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# HTTP Pub Sub Server
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Http pub sub server allows pushing of message to subscribers via HTTP. HTTP Pub Sub server is persistent and sends notifications in real time. When a message is sent to the pub sub server via a topic, the sub sub server will publish the message to all the subscribers that have subscribed to that topic with thier designated webhooks (url). Pub sub server will **retry for a maximum of 7 times** when the subscribers do not return response code between **200** and **299**
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+![Http Pub SubServer](https://pangaea-interviews.now.sh/_next/static/images/pubsub-diagram-15a833df7c2a0fd11cade0630fe8e8ba.png)
 
-## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### How it works
+To see how the pubsub server works instantly,  Docker-compose,  might be a good fit .
+
+Simple run
+
+> docker-compose up
+
+This will instantly run a postgres DB, the pubsub server as well as three other subscribers listed below with thier respective binding ports.
+
+    http://localhost:4000 ===> http://meridian:3000
+    http://localhost:5000 ===> http://luminskin:4000
+    http://localhost:6000 ===> http://menskin:5000
+
+Send messages to the pub sub server on
+
+    $ curl -X POST -H "Content-Type: application/json" -d '{"message": "hello"}' http://localhost:3000/publish/topic1
+
+Subscribe to a topic using
+
+    $ curl -X POST -d '{ "url": "http://meridian:3000/event"}' http://localhost:3000/subscribe/topic1
+
+Since you are using docker compose be careful about the domain and ports when listing subscribers.
 
 ## Installation
 
-```bash
-$ npm install
-```
+### Build
+After Pulling the code follow the steps below.
 
-## Running the app
+> npm ci
 
-```bash
-# development
-$ npm run start
+> npm run build
 
-# watch mode
-$ npm run start:dev
+Before Starting up project make sure to set all enviroment Variables in config folder else you can also create your own `.env` file with the following environment.
 
-# production mode
-$ npm run start:prod
-```
+    PORT= 2000  
+    NODE_ENV= production  
+    DB_TYPE= postgres  
+    DB_HOST= postgres  
+    DB_PORT= 5432  
+    DB_USERNAME= pangaea  
+    DB_PASSWORD= pangaea
+    DB_NAME= pub_sub_db 
+    DROP_SCHEMA= 'false'  
+    SHOW_LOG= 'false'
+    TYPEORM_SYNC= 'true'
 
-## Test
+NB: Make sure to set up all databases and use right credentials.
 
-```bash
-# unit tests
-$ npm run test
+Start Server Pubsub server using
 
-# e2e tests
-$ npm run test:e2e
+> npm run start:prod
 
-# test coverage
-$ npm run test:cov
-```
+## Using Docker
+Docker  might be a good alternative to get around with the pub server server.
 
-## Support
+To build docker image run
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+>docker build . -t pubsub
 
-## Stay in touch
+Run docker instance with
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+> docker run -p 3000:3000 \
+> -e  PORT= 2000  \
+> -e NODE_ENV= production \
+> -e DB_TYPE=postgres \
+-e  DB_HOST= postgres  \
+-e  DB_PORT= 5432  \
+-e  DB_USERNAME= pangaea  \
+-e DB_PASSWORD= pangaea \
+-e  DB_NAME= pub_sub_db \
+-e  DROP_SCHEMA= 'false'  \
+-e SHOW_LOG= 'false' \
+-e TYPEORM_SYNC= 'true' \
+pubsub
 
-## License
+## Model Diagram
 
-Nest is [MIT licensed](LICENSE).
+![enter image description here](https://asobooks-prod.s3.eu-west-2.amazonaws.com/pusub-server-model.png)
+

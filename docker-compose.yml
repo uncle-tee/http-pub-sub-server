@@ -13,10 +13,9 @@ services:
       - ./data/db_data:/var/lib/postgresql/data
 
   pub-sub:
-    #    build:
-    #      context: .
-    #      dockerfile: Dockerfile
-    image: pubsub
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - 3000:2000
     environment:
@@ -41,10 +40,9 @@ services:
 
   #    Subscribers
   meridian:
-    #    build:
-    #      context: .
-    #      dockerfile: Dockerfile
-    image: pubsub
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - 4000:3000
     environment:
@@ -58,10 +56,9 @@ services:
       ]
 
   luminskin:
-    #    build:
-    #      context: .
-    #      dockerfile: Dockerfile
-    image: pubsub
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - 5000:4000
     environment:
@@ -75,10 +72,9 @@ services:
       ]
 
   menskin:
-    #    build:
-    #      context: .
-    #      dockerfile: Dockerfile
-    image: pubsub
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - 6000:5000
     environment:
